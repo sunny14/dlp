@@ -1,6 +1,10 @@
+package kafka
+
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.slf4j.LoggerFactory
+import scanners.scanForCreditCards
 import java.time.Duration
 import java.util.*
 
@@ -13,6 +17,8 @@ private fun createConsumer(brokers: String): Consumer<String, String> {
     return KafkaConsumer<String, String>(props)
 }
 
+val logger = LoggerFactory.getLogger("consumer")
+
 
 fun main() {
     val consumer = createConsumer("localhost:9092")
@@ -20,7 +26,15 @@ fun main() {
 
     while (true) {
         val records = consumer.poll(Duration.ofSeconds(1))
-        println(records.last())
+        for (rec in records)    {
+            val found = scanForCreditCards(rec.value())
+            if (found.isNotEmpty())   {
+                logger.error("found credit card details: \n $found")
+            }
+            else    {
+                logger.info("this message was scanned, no credit card details found:\n$rec")
+            }
+        }
     }
 
 }
