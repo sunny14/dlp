@@ -1,16 +1,11 @@
 package kafka
 
-import kafka.Kafka.Companion.BROCKERS
-import kafka.Kafka.Companion.CREDIT_CARDS_TOPIC
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.common.serialization.StringDeserializer
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
-import scanners.scanForCreditCards
 import java.util.*
 
-class Consumer(kafka: Kafka, topic: String) {
+open class Consumer(kafka: Kafka, topic: String) {
     private val kafkaConsumer: KafkaConsumer<String, String>
 
     @Volatile
@@ -45,24 +40,5 @@ class Consumer(kafka: Kafka, topic: String) {
 
 }
 
-fun main() {
-    val log: Logger = LoggerFactory.getLogger("Consumer")
 
-    val kafka = Kafka(BROCKERS)
-    val topic = CREDIT_CARDS_TOPIC
-
-    val consumer = Consumer(kafka, topic)
-    Runtime.getRuntime().addShutdownHook(Thread(Runnable {
-        consumer.stop()
-    }))
-    consumer.consume {
-                val found = scanForCreditCards(it)
-                if (found.isNotEmpty())   {
-                    println("found credit card details: \n $found")
-                }
-                else    {
-                    println("this message was scanned, no credit card details found:\n$it")
-                }
-    }
-}
 

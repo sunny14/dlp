@@ -2,6 +2,7 @@ package kafka
 
 import kafka.Kafka.Companion.BROCKERS
 import kafka.Kafka.Companion.CREDIT_CARDS_TOPIC
+import kafka.Kafka.Companion.IBAN_TOPIC
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.clients.producer.ProducerRecord
@@ -36,14 +37,17 @@ fun main() {
 
     val kafka = Kafka(BROCKERS)
 
-    val producer = Producer(kafka, CREDIT_CARDS_TOPIC)
+    val credProducer = Producer(kafka, CREDIT_CARDS_TOPIC)
+    val ibanProducer = Producer(kafka, IBAN_TOPIC)
+
     (1..10).forEach {
         println("Please enter the text...\n")
         val input = readLine()
         val msg = "test message $input ${LocalDateTime.now()}"
-        println("sending $msg")
-        producer.send(msg)
+        log.debug("sending $msg")
+        credProducer.send(msg)
+        ibanProducer.send(msg)
     }
-    producer.flush()
+    credProducer.flush()
 
 }
