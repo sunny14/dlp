@@ -8,7 +8,7 @@ import scanners.scanForCreditCards
 import java.time.Duration
 import java.util.*
 
-private fun createConsumer(brokers: String): Consumer<String, String> {
+fun createConsumer(brokers: String): Consumer<String, String> {
     val props = Properties()
     props["bootstrap.servers"] = brokers
     props["group.id"] = "person-processor"
@@ -19,7 +19,7 @@ private fun createConsumer(brokers: String): Consumer<String, String> {
 
 val logger = LoggerFactory.getLogger("consumer")
 
-
+/*
 fun main() {
     val consumer = createConsumer("localhost:9092")
     consumer.subscribe(listOf("mytopic"))
@@ -37,4 +37,4 @@ fun main() {
         }
     }
 
-}
+}*/
