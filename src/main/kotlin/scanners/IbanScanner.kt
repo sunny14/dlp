@@ -1,5 +1,7 @@
 package scanners
 
+import scanners.Luhn.isLuhnValid
+
 const val IBAN_PATTERN = """\b[A-Z]{2}[0-9]{2}[[0-9]{4} ]{1,7}[0-9]{1,3}\b"""
 
 //TODO: extend country codes list
@@ -17,7 +19,7 @@ private fun scanForIban(data: String, rules: List<String>): List<String>  {
         val found = rule.findAll(data)
 
         val validIbans = found.filter { iban ->
-                COUNTRY_CODES.contains(iban.value.subSequence(0,2))
+                COUNTRY_CODES.contains(iban.value.subSequence(0,2)) && isLuhnValid(iban.value)
             }
 
         report.add("for rule $rule found: \n $validIbans")
