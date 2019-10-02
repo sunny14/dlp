@@ -1,0 +1,6 @@
+
+HOW TO START
+
+1. start kafka, create following topics: creditcards, iban
+3. start CreditCardConsumer.main and IbanConsumer.main
+3. start Producer.main; you will be prompted to input a text from CLI
